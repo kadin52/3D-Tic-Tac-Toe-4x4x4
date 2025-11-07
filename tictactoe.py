@@ -147,20 +147,20 @@ class Connect3D(object):
             self._display_score = False
 
             if was_flipped:
-                print "Flip the Grid!"
+                print("Flip the Grid!")
 
 
             #Check if no spaces are left
             if '' not in self.grid_data:
                 winning_player = self._get_winning_player()
                 if len(winning_player) == 1:
-                    print 'Player {} won!'.format(winning_player[0])
+                    print('Player {} won!'.format(winning_player[0]))
                 else:
-                    print 'It is a draw!'
+                    print('It is a draw!')
 
                 #Ask to play again and check if answer is a variant of 'yes' or 'ok'
-                print 'Want to play again?'
-                play_again = raw_input().lower()
+                print('Want to play again?')
+                play_again = input().lower()
                 if any(i in play_again for i in ('y', 'k')):
                     self.reset()
                 else:
@@ -169,20 +169,20 @@ class Connect3D(object):
 
 
             #Player takes a move, function returns True if it updates the grid, otherwise loop again
-            print "Player {}'s turn...".format(self.player_symbols[self.current_player])
+            print("Player {}'s turn...".format(self.player_symbols[self.current_player]))
             if (player1 and not self.current_player) or (player2 and self.current_player):
-                while not self.make_move(self.player_symbols[self.current_player], raw_input().replace(',', ' ').replace('.', ' ').split()):
-                    print "Grid cell unavailable, please try again."
+                while not self.make_move(self.player_symbols[self.current_player], input().replace(',', ' ').replace('.', ' ').split()):
+                    print("Grid cell unavailable, please try again.")
             else:
                 ai_go = SimpleC3DAI(self, self.current_player).calculate_next_move()
                 if not self.make_move(self.player_symbols[self.current_player], ai_go):
                     raise Connect3DError('Something unknown went wrong with the AI')
                 else:
-                    print "Computer chooses the cell {}.".format(PointConversion(self.grid_size, ai_go).to_3d())
+                    print("Computer chooses the cell {}.".format(PointConversion(self.grid_size, ai_go).to_3d()))
 
                 #Wait a short while
                 time.sleep(max(0, min_time_update, time.time()-current_time))
-            print
+            print()
 
 
     def make_move(self, id, *args):
@@ -356,9 +356,9 @@ class PointConversion(object):
     def to_3d(self):
        
         cell_id = int(self.i)
-        z = cell_id / pow(self.grid_size, 2) 
+        z = cell_id // pow(self.grid_size, 2)
         cell_id %= pow(self.grid_size, 2)
-        y = cell_id / self.grid_size
+        y = cell_id // self.grid_size
         x = cell_id % self.grid_size
         return tuple(cell_id+1 for cell_id in (x, y, z))
 
@@ -413,9 +413,9 @@ def join_list(x):
 def get_max_dict_keys(x):
     
     if x:
-        sorted_dict = sorted(x.iteritems(), key=operator.itemgetter(1), reverse=True)
+        sorted_dict = sorted(x.items(), key=operator.itemgetter(1), reverse=True)
         if sorted_dict[0][1]:
-            return sorted([k for k, v in x.iteritems() if v == sorted_dict[0][1]])
+            return sorted([k for k, v in x.items() if v == sorted_dict[0][1]])
     return []
 
 
@@ -542,7 +542,7 @@ class SimpleC3DAI(object):
             next_moves = [i for i in range(self.gd_len) if not self.C3DObject.grid_data[i]]
             state = 'Start'
 
-        print 'Computer State: ' + state + '.'
+        print('Computer State: ' + state + '.')
 
         return random.choice(next_moves)
 
